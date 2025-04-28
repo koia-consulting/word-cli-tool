@@ -1,31 +1,36 @@
-﻿using System;
-using System.IO;
-using DocumentFormat.OpenXml.Packaging;
+﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml;
 
-class Program
+namespace WordDoc;
+
+internal static class Program
 {
-    static void Main()
+    private static void Main(string[] args)
     {
-        string outputFolder = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName, "output");
+        for (var index = 0; index < args.Length; index++)
+        {
+            Console.WriteLine($"Id={index}: {args[index]}");
+        }
+
+        var outputFolder = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName, "output");
         Directory.CreateDirectory(outputFolder); // Ensure the folder exists
 
-        string fileName = "SampleDocument.docx";
-        string filePath = Path.Combine(outputFolder, fileName);
+        var fileName = "SampleDocument.docx";
+        var filePath = Path.Combine(outputFolder, fileName);
 
         // Create a new document
-        using (WordprocessingDocument wordDoc = WordprocessingDocument.Create(filePath, WordprocessingDocumentType.Document))
+        using (var wordDoc = WordprocessingDocument.Create(filePath, WordprocessingDocumentType.Document))
         {
             // Add main document part
-            MainDocumentPart mainPart = wordDoc.AddMainDocumentPart();
+            var mainPart = wordDoc.AddMainDocumentPart();
             mainPart.Document = new Document(new Body());
 
-            Body body = mainPart.Document.Body ?? new Body();
+            var body = mainPart.Document.Body ?? new Body();
 
             // Add a paragraph
-            Paragraph para = new Paragraph();
-            Run run = new Run();
+            var para = new Paragraph();
+            var run = new Run();
             run.Append(new Text("This is a sample paragraph."));
 
             para.Append(run);
