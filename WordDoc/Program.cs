@@ -1,7 +1,7 @@
-﻿using System.Text.Json;
-using DocumentFormat.OpenXml;
+﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using System.Text.Json;
 
 namespace WordDoc;
 
@@ -60,9 +60,13 @@ internal static class Program
 
         // Check if the file exists
         if (File.Exists(filePath))
+        {
             Console.WriteLine($"Document created successfully at: {filePath}");
+        }
         else
+        {
             Console.WriteLine("Failed to create the document.");
+        }
     }
 
     private static void AddComment(MainDocumentPart mainPart, Run run, string author, string commentText)
@@ -70,12 +74,7 @@ internal static class Program
         var commentsPart = mainPart.AddNewPart<WordprocessingCommentsPart>();
         commentsPart.Comments = new Comments();
 
-        var comment = new Comment
-        {
-            Id = "0",
-            Author = author,
-            Date = DateTime.Now
-        };
+        var comment = new Comment { Id = "0", Author = author, Date = DateTime.Now };
         comment.AppendChild(new Paragraph(new Run(new Text(commentText))));
         commentsPart.Comments.Append(comment);
         commentsPart.Comments.Save();
@@ -88,12 +87,7 @@ internal static class Program
     private static void AddSuggestedEdit(MainDocumentPart mainPart, Paragraph para)
     {
         var run = new Run();
-        var ins = new InsertedRun
-        {
-            Id = "1",
-            Author = "Filip",
-            Date = DateTime.Now
-        };
+        var ins = new InsertedRun { Id = "1", Author = "Filip", Date = DateTime.Now };
         ins.Append(new Text(" [suggested added text]"));
 
         run.Append(ins);
