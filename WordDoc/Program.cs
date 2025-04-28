@@ -1,6 +1,7 @@
-﻿using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Wordprocessing;
+﻿using System.Text.Json;
 using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace WordDoc;
 
@@ -11,9 +12,21 @@ internal static class Program
         for (var index = 0; index < args.Length; index++)
         {
             Console.WriteLine($"Id={index}: {args[index]}");
+
+            try
+            {
+                var options = JsonSerializer.Deserialize<Dictionary<string, string>>(args[index]);
+                Console.WriteLine($"Position: {options["position"]}");
+                Console.WriteLine($"Comment: {options["comment"]}");
+            }
+            catch (JsonException)
+            {
+                //
+            }
         }
 
-        var outputFolder = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName, "output");
+        var outputFolder = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName,
+            "output");
         Directory.CreateDirectory(outputFolder); // Ensure the folder exists
 
         var fileName = "SampleDocument.docx";
@@ -47,21 +60,17 @@ internal static class Program
 
         // Check if the file exists
         if (File.Exists(filePath))
-        {
             Console.WriteLine($"Document created successfully at: {filePath}");
-        }
         else
-        {
             Console.WriteLine("Failed to create the document.");
-        }
     }
 
-    static void AddComment(MainDocumentPart mainPart, Run run, string author, string commentText)
+    private static void AddComment(MainDocumentPart mainPart, Run run, string author, string commentText)
     {
         var commentsPart = mainPart.AddNewPart<WordprocessingCommentsPart>();
         commentsPart.Comments = new Comments();
 
-        var comment = new Comment()
+        var comment = new Comment
         {
             Id = "0",
             Author = author,
@@ -71,15 +80,15 @@ internal static class Program
         commentsPart.Comments.Append(comment);
         commentsPart.Comments.Save();
 
-        run.PrependChild(new CommentRangeStart() { Id = "0" });
-        run.AppendChild(new CommentRangeEnd() { Id = "0" });
-        run.AppendChild(new Run(new CommentReference() { Id = "0" }));
+        run.PrependChild(new CommentRangeStart { Id = "0" });
+        run.AppendChild(new CommentRangeEnd { Id = "0" });
+        run.AppendChild(new Run(new CommentReference { Id = "0" }));
     }
 
-    static void AddSuggestedEdit(MainDocumentPart mainPart, Paragraph para)
+    private static void AddSuggestedEdit(MainDocumentPart mainPart, Paragraph para)
     {
         var run = new Run();
-        var ins = new InsertedRun()
+        var ins = new InsertedRun
         {
             Id = "1",
             Author = "Filip",
