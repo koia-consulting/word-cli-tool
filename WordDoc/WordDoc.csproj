@@ -7,7 +7,6 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <PublishSingleFile>true</PublishSingleFile>
         <SelfContained>true</SelfContained>
-        <PublishTrimmed>true</PublishTrimmed>
         <InvariantGlobalization>true</InvariantGlobalization>
         <PublishDir>$(MSBuildProjectDirectory)/../commenter</PublishDir>
     </PropertyGroup>
