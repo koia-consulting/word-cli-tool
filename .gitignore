@@ -1,6 +1,7 @@
 # Build artifacts
 bin/
 obj/
+output/
 
 # User-specific files
 .vs/
