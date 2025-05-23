@@ -4,18 +4,20 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
+        <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <PublishSingleFile>true</PublishSingleFile>
+        <SelfContained>true</SelfContained>
+        <InvariantGlobalization>true</InvariantGlobalization>
+        <PublishDir>$(MSBuildProjectDirectory)/../commenter</PublishDir>
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+      <PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
+      <Folder Include="output\" />
     </ItemGroup>
 
 </Project>
