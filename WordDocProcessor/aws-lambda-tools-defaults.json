@@ -1,0 +1,9 @@
+{
+  "profile": "",
+  "region": "",
+  "configuration": "Release",
+  "function-runtime": "dotnet6",
+  "function-memory-size": 256,
+  "function-timeout": 30,
+  "function-handler": "WordDocProcessor::WordDocProcessor.Function::FunctionHandler"
+}

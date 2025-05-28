@@ -1,0 +1,9 @@
+version = 0.1
+[default.deploy.parameters]
+stack_name = "word-doc-deploy-v2"
+resolve_s3 = true
+s3_prefix = "word-doc-deploy-v2"
+region = "eu-central-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+image_repositories = ["WordDocProcessorFunction=783468594532.dkr.ecr.eu-central-1.amazonaws.com/worddocdeploysam12184508/worddocprocessorfunction23235057repo"]

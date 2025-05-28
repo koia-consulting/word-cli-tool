@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+    Api:
+        EndpointConfiguration: REGIONAL
+
+Resources:
+    MyApi:
+        Type: AWS::Serverless::Api
+        Properties:
+            Name: WordDocAPI
+            StageName: v1
+            Auth:
+                ApiKeyRequired: true
+
+    WordDocProcessorFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            PackageType: Image
+            FunctionName: WordDocProcessor
+            Events:
+                ProcessApi:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref MyApi
+                        Path: /process
+                        Method: post
+                        Auth:
+                            ApiKeyRequired: true
+        Metadata:
+            Dockerfile: Dockerfile
+            DockerContext: .
+            DockerTag: v1
+
+    WordDocAPIKey:
+        Type: AWS::ApiGateway::ApiKey
+        Properties:
+            Name: WordDocAPIKey
+            Enabled: true
+
+    WordDocUsagePlan:
+        Type: AWS::ApiGateway::UsagePlan
+        Properties:
+            UsagePlanName: WordDocUsagePlan
+            ApiStages:
+                - ApiId: !GetAtt MyApi.RestApiId
+                  Stage: !Ref MyApi.Stage
+            Throttle:
+                RateLimit: 10
+                BurstLimit: 2
+
+    WordDocUsagePlanKey:
+        Type: AWS::ApiGateway::UsagePlanKey
+        Properties:
+            KeyId: !Ref WordDocAPIKey
+            KeyType: API_KEY
+            UsagePlanId: !Ref WordDocUsagePlan
+
+Outputs:
+    ApiEndpoint:
+        Description: "API endpoint URL"
+        Value: !Sub "https://${MyApi}.execute-api.${AWS::Region}.amazonaws.com/v1/process"
+
+    ApiKeyValue:
+        Description: "API Key to use"
+        Value: !Ref WordDocAPIKey
